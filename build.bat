@@ -1,0 +1,1 @@
+pyinstaller -F -w -n Updater -i icon.ico update.py
