@@ -63,17 +63,20 @@ def get_update(): # 获取更新
                         z.extract(i,os.getcwd())
                         os.rename(i,"随机点名.exe")
                         z.close()
-                    sleep(1)
                     os.remove("update.zip")
                     logger.info("update successfully!Starting...")
-                    os.system("随机点名.exe")
-                    break
+                    sleep(1)
+                    start()
+                    os._exit(0)
 
+def start(): # after update
+    os.system("cmd /c start 随机点名.exe")
 @logger.catch
 def main():
     logger.info(sys.argv)
     logger.info(os.getcwd())
     args=sys.argv[1:]
+    logger.info("Inirtialized,starting...")
     if args[0] == "update":
         get_update()
     else:
