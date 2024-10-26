@@ -49,7 +49,7 @@ def get_update(): # 获取更新
                             bar=tqdm(total=size,unit='iB',unit_scale=True)
                             print(r)
                             with open("update.zip",'wb') as file:
-                                    for chuck in r.iter_bytes(chunk_size=1024*500):
+                                    for chuck in r.iter_bytes(chunk_size=1024*300):
                                         file.write(chuck)
                                         bar.update(len(chuck))
                         else:
