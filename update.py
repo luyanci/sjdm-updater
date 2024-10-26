@@ -2,6 +2,7 @@ import os
 import sys
 import zipfile
 import datetime
+from time import sleep
 import httpx as request
 from loguru import logger
 from tqdm.tk import tqdm
@@ -10,7 +11,7 @@ timeout=request.Timeout(10.0)
 api_url="https://gitee.com/api/v5/repos/vc_teahouse/sjdm/releases/latest"
 
 
-def check_update(localver:str):
+def check_update(localver:str="v1.2.0-200424"): # 检测更新，已弃用
     logger.info("checking...")
     try:
         respond=request.get(api_url,timeout=timeout)
@@ -27,7 +28,7 @@ def check_update(localver:str):
                 return False
 
 
-def get_update():
+def get_update(): # 获取更新
     logger.info("checking...")
     try:
         respond=request.get(api_url,timeout=timeout)
@@ -37,12 +38,13 @@ def get_update():
         if respond.status_code == 200:
             data=respond.json()['assets']
             for i in data:
-                print(i)
+                logger.info(i)
                 k=i["name"]
                 j=i["browser_download_url"]
                 if k =="随机点名.zip":
                     with request.stream(method="GET",url=j,follow_redirects=True,timeout=timeout) as r:
                         if r.status_code == 200:
+                            logger.info("downloading...")
                             size=int(r.headers.get('content-length',0))
                             bar=tqdm(total=size,unit='iB',unit_scale=True)
                             print(r)
@@ -52,11 +54,19 @@ def get_update():
                                         bar.update(len(chuck))
                         else:
                             logger.info("failed!")
-                    os.remove("随机点名.exe")
+                    try:
+                        os.remove("随机点名.exe")
+                    except FileNotFoundError:
+                        pass
                     z=zipfile.ZipFile("update.zip",'r')
                     for i in z.namelist():
                         z.extract(i,os.getcwd())
+                        os.rename(i,"随机点名.exe")
+                        z.close()
+                    sleep(1)
                     os.remove("update.zip")
+                    logger.info("update successfully!Starting...")
+                    os.system("随机点名.exe")
                     break
 
 @logger.catch
@@ -67,7 +77,7 @@ def main():
     if args[0] == "update":
         get_update()
     else:
-        check_update(args[0])
+        check_update()
 
 
 
