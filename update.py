@@ -88,5 +88,5 @@ def main():
 
 if __name__ == "__main__":
     today=datetime.date.today()
-    logger.add(f"./res/logs/updater-{today}.log")
+    logger.add(f"./updatelogs/updater-{today}.log")
     main()
