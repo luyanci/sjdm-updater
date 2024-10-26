@@ -24,7 +24,7 @@ jobs:
             - name: Build
               run: pyinstaller -F -n Updater -i icon.ico update.py
             - name: Archive artifact
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                 name: updater
                 path: dist\Updater.exe
