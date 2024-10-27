@@ -16,6 +16,7 @@ jobs:
               uses: actions/setup-python@v5
               with:
                 python-version: '3.8'
+                architecture: 'x86'
                 cache: 'pip'
                 cache-dependency-path: '**/requirements.txt'
             - name: Install dependencies
@@ -23,7 +24,7 @@ jobs:
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
             - name: Build
-              run: pyinstaller -F -n Updater -i icon.ico --32 update.py
+              run: pyinstaller -F -n Updater -i icon.ico update.py
             - name: Archive artifact
               uses: actions/upload-artifact@v4
               with:
