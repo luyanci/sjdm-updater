@@ -23,7 +23,7 @@ jobs:
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
             - name: Build
-              run: pyinstaller -F -n Updater -i icon.ico update.py
+              run: pyinstaller -F -n Updater -i icon.ico --32 update.py
             - name: Archive artifact
               uses: actions/upload-artifact@v4
               with:
