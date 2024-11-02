@@ -2,22 +2,40 @@ import os
 import sys
 import zipfile
 import datetime
-from time import sleep
 import httpx as request
+from time import sleep
 from loguru import logger
 from tqdm.tk import tqdm
+from dotenv import load_dotenv
 
 timeout=request.Timeout(10.0)
-api_url="https://gitee.com/api/v5/repos/vc_teahouse/sjdm/releases/latest"
-
+def add_token():
+    global api_url
+    api_url=str("https://gitee.com/api/v5/repos/vc_teahouse/sjdm/releases/latest")
+    failed=False
+    token=""
+    load_dotenv(dotenv_path=".env")
+    try:
+        token=os.environ["access_token"]
+    except KeyError:
+        failed=True
+        return
+    finally:
+        if failed:
+            logger.info("No access_token found in .env file!")
+        else:
+            api_url=api_url+f"?access_token={token}"
+        logger.info(f"Using access_token:{token}")
 
 def check_update(localver:str="v1.2.0-200424"): # 检测更新，已弃用
     logger.info("checking...")
     try:
         respond=request.get(api_url,timeout=timeout)
     except:
-        pass
+        logger.info("failed!")
+        raise
     finally:
+        print(respond)
         if respond.status_code == 200:
             data=respond.json()
             logger.info(f"Upstream:{data['tag_name']}")
@@ -76,6 +94,7 @@ def main():
     logger.info(sys.argv)
     logger.info(os.getcwd())
     args=sys.argv[1:]
+    add_token()
     logger.info("Inirtialized,starting...")
     if args[0] == "update":
         get_update()
