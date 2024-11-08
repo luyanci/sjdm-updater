@@ -1,2 +1,6 @@
+@echo off
+echo building...
 pyinstaller -F -w -n Updater -i icon.ico update.py
+echo building debug...
 pyinstaller -F -n Updater-debug -i icon.ico update.py
+echo done
