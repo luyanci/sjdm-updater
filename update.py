@@ -9,6 +9,7 @@ from tqdm.tk import tqdm
 from dotenv import load_dotenv
 
 timeout=request.Timeout(10.0)
+cancel_update=False
 def add_token():
     global api_url
     api_url=str("https://gitee.com/api/v5/repos/vc_teahouse/sjdm/releases/latest")
@@ -64,12 +65,22 @@ def get_update(): # 获取更新
                         if r.status_code == 200:
                             logger.info("downloading...")
                             size=int(r.headers.get('content-length',0))
-                            bar=tqdm(total=size,unit='iB',unit_scale=True)
+                            bar=tqdm(total=size,unit='iB',unit_scale=True,desc="正在下载更新，请不要关闭窗口...",cancel_callback=close_window)
                             print(r)
                             with open("update.zip",'wb') as file:
                                     for chuck in r.iter_bytes(chunk_size=1024*300):
-                                        file.write(chuck)
-                                        bar.update(len(chuck))
+                                        if cancel_update:
+                                            file.close()
+                                            os.remove("update.zip")
+                                            bar.close()
+                                            logger.info("Update cancelled by user,now starting...")
+                                            start()
+                                            os._exit(0)
+                                        else:
+                                            file.write(chuck)
+                                            bar.update(len(chuck))
+                                            bar.refresh()
+                                    file.close()
                         else:
                             logger.info("failed!")
                     try:
@@ -86,9 +97,15 @@ def get_update(): # 获取更新
                     sleep(1)
                     start()
                     os._exit(0)
+        else:
+            logger.exception(f"{respond.text}")
 
 def start(): # after update
     os.system("cmd /c start 随机点名.exe")
+
+def close_window(): # cancel update
+    global cancel_update
+    cancel_update=True
 @logger.catch
 def main():
     logger.info(sys.argv)
@@ -100,10 +117,6 @@ def main():
         get_update()
     else:
         check_update()
-
-
-
-
 
 if __name__ == "__main__":
     today=datetime.date.today()
