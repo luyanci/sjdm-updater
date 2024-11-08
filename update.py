@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 timeout=request.Timeout(10.0)
 cancel_update=False
+
 def add_token():
     global api_url
     api_url=str("https://gitee.com/api/v5/repos/vc_teahouse/sjdm/releases/latest")
@@ -45,7 +46,6 @@ def check_update(localver:str="v1.2.0-200424"): # 检测更新，已弃用
                 return True
             else:
                 return False
-
 
 def get_update(): # 获取更新
     logger.info("checking...")
@@ -106,6 +106,8 @@ def start(): # after update
 def close_window(): # cancel update
     global cancel_update
     cancel_update=True
+    return
+
 @logger.catch
 def main():
     logger.info(sys.argv)
