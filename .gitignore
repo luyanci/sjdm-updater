@@ -4,5 +4,7 @@ dist
 *.exe
 .env
 *.log
+*.dll
+res.zip
 res
 updatelogs\*
