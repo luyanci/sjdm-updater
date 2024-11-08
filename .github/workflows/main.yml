@@ -24,12 +24,18 @@ jobs:
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
             - name: Build
-              run: pyinstaller -F -n Updater -i icon.ico update.py
+              run: build.bat
+              shell: cmd
             - name: Archive artifact
               uses: actions/upload-artifact@v4
               with:
                 name: updater
                 path: dist\Updater.exe
+            - name: Archive debug artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: updater-debug
+                path: dist\Updater-debug.exe
             - name: Archive build
               uses: actions/upload-artifact@v4
               with:
