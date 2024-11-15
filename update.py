@@ -112,6 +112,9 @@ def close_window(): # cancel update
 def main():
     logger.info(sys.argv)
     logger.info(os.getcwd())
+    if len(sys.argv) == 1: # no args
+        logger.info("No args,exiting...")
+        os._exit(0)
     args=sys.argv[1:]
     add_token()
     logger.info("Inirtialized,starting...")
