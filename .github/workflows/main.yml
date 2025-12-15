@@ -27,17 +27,17 @@ jobs:
               run: build.bat
               shell: cmd
             - name: Archive artifact
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v6
               with:
                 name: updater
                 path: dist\Updater.exe
             - name: Archive debug artifact
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v6
               with:
                 name: updater-debug
                 path: dist\Updater-debug.exe
             - name: Archive build
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v6
               with:
                 name: updater-build
                 path: build/*
